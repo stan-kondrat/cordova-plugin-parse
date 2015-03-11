@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+        id="com.parse.cordova"
+        version="0.2.0">
+
+  <name>Parse</name>
+
+  <engines>
+    <engine name="cordova" version=">=3.4.0"/>
+  </engines>
+
+  <asset src="www/parse.js" target="js/parse.js"/>
+
+  <js-module src="www/parse.js" name="parse">
+    <clobbers target="cordova.plugins.Parse" />
+  </js-module>
+
+  <platform name="ios">
+    
+    <config-file target="config.xml" parent="/*">
+      <feature name="Parse">
+        <param name="ios-package" value="CDVParse"/>
+      </feature>
+    </config-file>
+
+    <header-file src="src/ios/CDVParse.h" target-dir="ParsePlugin"/>
+    <source-file src="src/ios/CDVParse.m" target-dir="ParsePlugin"/>
+  </platform>
+
+</plugin>
