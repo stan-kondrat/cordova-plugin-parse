@@ -11,5 +11,8 @@ Parse.facebookLogin = function(successCallback, errorCallback) {
 	cordova.exec(successCallback, errorCallback, "Parse", "facebookLogin", []);
 };
 
+Parse.logout = function(successCallback, errorCallback) {
+	cordova.exec(successCallback, errorCallback, "Parse", "logout", []);
+};
 
 module.exports = Parse;

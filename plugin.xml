@@ -15,6 +15,9 @@
     <clobbers target="cordova.plugins.Parse" />
   </js-module>
 
+  <preference name="FACEBOOK_APP_NAME" />
+  <preference name="FACEBOOK_APP_ID" />
+
   <platform name="ios">
     
     <config-file target="config.xml" parent="/*">
@@ -25,6 +28,40 @@
 
     <header-file src="src/ios/CDVParse.h" target-dir="ParsePlugin"/>
     <source-file src="src/ios/CDVParse.m" target-dir="ParsePlugin"/>
+
+    <framework src="Accounts.framework" />
+    <framework src="AudioToolbox.framework" />
+    <framework src="CFNetwork.framework" />
+    <framework src="CoreGraphics.framework" />
+    <framework src="CoreLocation.framework" />
+    <framework src="MobileCoreServices.framework" />
+    <framework src="QuartzCore.framework" />
+    <framework src="Security.framework" />
+    <framework src="Social.framework" />
+    <framework src="StoreKit.framework" />
+    <framework src="SystemConfiguration.framework" />
+    <framework src="libz.dylib" />
+    <framework src="libsqlite3.dylib" />
+
+    <config-file target="*-Info.plist" parent="FacebookDisplayName">
+       <string>[**FACEBOOK_APP_NAME**]</string>
+    </config-file>
+    
+    <config-file target="*-Info.plist" parent="FacebookAppID">
+       <string>[**FACEBOOK_APP_ID**]</string>
+    </config-file>
+
+    <config-file target="*-Info.plist" parent="CFBundleURLTypes">
+      <array>
+          <dict>
+              <key>CFBundleURLSchemes</key>
+              <array>
+                <string>fb[**FACEBOOK_APP_ID**]</string>
+              </array>
+          </dict>
+      </array>
+    </config-file>
+
   </platform>
 
 </plugin>

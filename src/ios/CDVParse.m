@@ -46,7 +46,7 @@
             
             [self _loadData];
             
-            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK  messageAsString:user.sessionToken];
             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         } 
     }];
@@ -74,6 +74,8 @@
             // Parse the data received
             NSDictionary *userData = (NSDictionary *)result;
             
+            NSLog(@"%@", userData);
+            
             NSString *facebookID = userData[@"id"];
             
             
@@ -91,6 +93,17 @@
             NSString *location = userData[@"location"][@"name"];
             if (location) {
                 userProfile[@"location"] = location;
+                
+                [FBRequestConnection startWithGraphPath: userData[@"location"][@"id"]
+                    completionHandler:^( FBRequestConnection *connection, id result, NSError *error
+                ) {
+                    NSDictionary *locationResult = (NSDictionary *)result;
+                    if(locationResult[@"location"][@"latitude"]){
+                        PFGeoPoint *userGeoPoint = [PFGeoPoint geoPointWithLatitude:[locationResult[@"location"][@"latitude"]  doubleValue] longitude:[locationResult[@"location"][@"longitude"]  doubleValue]];
+                        [[PFUser currentUser] setObject:userGeoPoint forKey:@"location"];
+                        [[PFUser currentUser] saveInBackground];
+                    }
+                }];
             }
             
             NSString *gender = userData[@"gender"];
@@ -110,8 +123,11 @@
             
             userProfile[@"pictureURL"] = [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large&return_ssl_resources=1", facebookID];
             
+
             [[PFUser currentUser] setObject:userProfile forKey:@"profile"];
             [[PFUser currentUser] saveInBackground];
+ 
+
             
         } else if ([[[[error userInfo] objectForKey:@"error"] objectForKey:@"type"]
                     isEqualToString: @"OAuthException"]) { // Since the request failed, we can check if it was due to an invalid session
